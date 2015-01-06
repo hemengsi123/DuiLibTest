@@ -1,8 +1,11 @@
 # Compiled Object files
 *.obj
+
+# other
 *.exp
 *.pdb
 *.ilk
+*.idb
 
 # directory
 # bin
