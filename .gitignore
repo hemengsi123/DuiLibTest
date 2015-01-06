@@ -6,6 +6,7 @@
 *.pdb
 *.ilk
 *.idb
+*.manifest
 
 # directory
 # bin
