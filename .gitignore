@@ -1,7 +1,4 @@
 # Compiled Object files
-*.slo
-*.lo
-*.o
 *.obj
 *.exp
 *.pdb
@@ -15,7 +12,6 @@ bin
 *.pch
 # Compiled Dynamic libraries
 *.so
-*.dylib
 *.dll
 
 # Fortran module files
