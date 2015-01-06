@@ -1,0 +1,14 @@
+# 
+# 2015-01-06[14:36] 
+# 
+
+HSRCS = $(HSRCS) \
+			.\StdAfx.h \
+
+CPPSRCS = $(CPPSRCS) \
+			.\main.cpp \
+			.\StdAfx.cpp \
+
+OBJS = $(OBJS) \
+			 $(OUTDIR)\main.obj $(OUTDIR)\StdAfx.obj
+
