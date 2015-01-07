@@ -3,7 +3,7 @@
 # by Simon 2014.12.31
 #
 
-TARGET  = test
+TARGET  = test1
 # OBJS    = test1.obj
 OUTDIR  = .\bin
 LIBS    = user32.lib kernel32.lib
