@@ -1,19 +1,19 @@
-# 2015-01-10[15:29] 
+# 2015-01-11[ 0:10] 
 
-{.}.CPP{$(OUTDIR)}.obj:
+{.}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
 
-{Control}.CPP{$(OUTDIR)}.obj:
+{Control}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
 
-{Utils}.CPP{$(OUTDIR)}.obj:
+{Utils}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
 
-{CORE}.CPP{$(OUTDIR)}.obj:
+{CORE}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
 
-{Layout}.CPP{$(OUTDIR)}.obj:
+{Layout}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
 
-{Utils}.C{$(OUTDIR)}.obj:
+{Utils}.C{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 

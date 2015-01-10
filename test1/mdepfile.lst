@@ -1,4 +1,4 @@
-# 2015-01-10[16:03] 
+# 2015-01-11[ 0:08] 
 
-{.}.CPP{$(OUTDIR)}.obj:
+{.}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 

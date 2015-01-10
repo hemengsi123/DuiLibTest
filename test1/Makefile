@@ -48,7 +48,7 @@ LDBGFLAGS = /debug  /pdb:"$(OUTDIR)\\$(TARGET).pdb"
 MAKEDEP = true
 # MAKEDEP = false
 !IF "$(MAKEDEP)" == "true"
-!IF [dir /b | findstr /x "msrcfile.lst" >nul:]
+!IF [dir /b | findstr /x "msrcfile.lst" >nul:] || [dir /b | findstr /x "mdepfile.lst" >nul:]
 !MESSAGE to make depend list...
 !IF [makedep.bat >nul:]
 !MESSAGE makedep.bat is not available

@@ -2,7 +2,7 @@
 # VC++ nmake Makefile
 # by Simon 2014.12.31
 #
-
+SRCDIRS = . Control Utils CORE Layout
 TARGET  = DuiLib
 # OBJS    = test1.obj
 OUTDIR  = .\bin
@@ -40,10 +40,11 @@ DLLFLAGS  = /BASE:"0x11000000" /DYNAMICBASE /NXCOMPAT /DLL /OUT:"$(OUTDIR)\\$@.d
 # 通过 makedep.bat 生成依赖文件 (msrcfile.lst 不存在,则执行makedep.bat)
 MAKEDEP = true
 # MAKEDEP = false
+# or -> || ; and -> && ; !IF EXISTS("msrcfile.lst")
 !IF "$(MAKEDEP)" == "true"
-!IF [dir /b | findstr /x "msrcfile.lst" >nul:]
+!IF [dir /b | findstr /x "msrcfile.lst" >nul:] || [dir /b | findstr /x "mdepfile.lst" >nul:]
 !MESSAGE to make depend list...
-!IF [makedep.bat >nul:]
+!IF [makedep.bat "" "." "$(SRCDIRS)"]
 !MESSAGE makedep.bat is not available
 !ENDIF
 !ENDIF
@@ -58,7 +59,9 @@ ALL: pre_handle $(TARGET)
 $(TARGET): $(OBJS) $(RESRCS)
 	$(LD) $(LDFLAGS) $(LDBGFLAGS) $(LIBDIRS) $(LIBS) $(DLLFLAGS) $(OBJS) $(RESRCS)
 
-
+!IF "$(MAKEDEP)" == "true"
+!INCLUDE "mdepfile.lst"
+!ENDIF
 # {Control}.cpp{$(OUTDIR)}.obj:
 # $(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $<
 
@@ -94,6 +97,3 @@ clean:
 # #pragma warning(disable:4005) 忽略4005警告
 # #pragma warning(default:4005) 打开4005警告
 
-!IF "$(MAKEDEP)" == "true"
-!INCLUDE "mdepfile.lst"
-!ENDIF

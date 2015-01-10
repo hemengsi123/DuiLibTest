@@ -3,27 +3,88 @@
 @rem to make Makefile depend list
 :main
 REM 源文件目录
-set SRCDIRS=. Control Utils CORE Layout
+REM set SRCDIRS=. Control Utils CORE Layout
+set SRCDIRS=
+set DepDir=
+set EXTS=.H .CPP .C
+set OBJS=
+REM 如果你要使用引号括起命令，必须要在前面再加一对空括号，否则会把路径当标题的 makedep.bat "" . ". Control Utils CORE Layout"
+REM %~1 - 删除任何引号("); 打印当前路径 chdir
+if "%~3" neq "" (
+	REM 设置依赖文件生成目录
+	if "%~2" neq "" (
+	if not exist "%~2" (
+		echo %~2 isn't exist
+		echo Usage[1]: makedep.bat dir
+		echo Usage[2]: makedep.bat
+		goto:eof
+	) else ( set DepDir=%~2)
+	REM 设置依赖文件生成在当前目录
+	) else ( if "%DepDir%" equ "" set DepDir=.)
+	REM 设置源码目录
+	if "%~3" equ "" (
+		if "%SRCDIRS%" equ "" (
+			REM 设置默认源码在当前目录
+			set SRCDIRS=.
+		)
+	) else ( set SRCDIRS=%~3)
+) else (
+REM ======= 使用默认设置 ========
+	if "%~1" neq "" (
+		if not exist "%~1" (
+			echo %~1 isn't exist
+			echo Usage[1]: makedep.bat dir
+			echo Usage[2]: makedep.bat
+			goto:eof
+		) else ( set DepDir=%~1)
+		REM 设置依赖文件生成在当前目录
+	) else ( if "%DepDir%" equ "" set DepDir=.)
+	if "%~2" equ "" (
+		if "%SRCDIRS%" equ "" (
+			REM 设置默认源码在当前目录
+			set SRCDIRS=.
+		)
+	) else ( set SRCDIRS=%~2)
+)
 
+if "%DepDir%" neq ""  (
+	echo depDir  = %DepDir%
+)
+REM %SRCDIRS:~1,-1% 去掉第一个和最后一个字符
+if "%SRCDIRS%" neq "" (
+	echo srcDirs = %SRCDIRS%
+)
+REM echo %~dp0
+REM goto:eof
 REM set OUTDIR=.\bin
 set curdate=%date:~0,4%-%date:~5,2%-%date:~8,2%[%time:~0,2%:%time:~3,2%]
 REM 生成依赖
+
+REM ============== 函数调用 ====================
+set srcfile=%DepDir%\msrcfile.lst
+set depfile=%DepDir%\mdepfile.lst
+
 call:makeDeplist
+
+if exist "%srcfile%" echo %srcfile% was generated
+if exist "%depfile%" echo %depfile% was generated
 REM 编译
 REM set TAG=%1
 
 REM nmake.exe /nologo /f Makefile.mak %TAG%
+rem ============= main end ===================
+goto:eof 
 
-goto:eof
-
+REM ========= 方法一 =============
 :makeDeplist
 set CPPSRCS=
 set CSRCS=
 set HSRCS=
-set EXTS=.H .CPP .C
-set OBJS=
-set srcfile=msrcfile.lst
-set depfile=mdepfile.lst
+REM set EXTS=.H .CPP .C
+REM set OBJS=
+REM set srcfile=%DepDir%\msrcfile.lst
+REM set depfile=%DepDir%\mdepfile.lst
+
 REM H%SUFFIX% 后缀
 set SUFFIX=SRCS
 echo # >%srcfile%
@@ -58,7 +119,7 @@ for %%x in (%EXTS%) do (
 						rem == make depfile ==
 						if "!oneTime!" == "1" (
 							echo.>>%depfile%
-							echo {%%i}%%x{^$^(OUTDIR^)}.obj:>>%depfile%
+							echo {%%i}%%x{^$^(OUTDIR^)}.obj::>>%depfile%
 							echo.	^$^(CC^) ^$^(CFLAGS^) ^$^(DEFINE^) ^$^(ENCODE^) ^$^(INCDIRS^) /Fo"$(OUTDIR)\\" ^$^(CDBGFLAGS^) ^$^< >>%depfile%
 						)
 					)
@@ -86,24 +147,24 @@ for %%x in (%EXTS%) do (
 		)
 	)
 )
-if "%HSRCS%" neq "" (
-	echo %HSRCS%
+REM if "%HSRCS%" neq "" (
+	REM echo %HSRCS%
 	REM echo.>>%srcfile%
 	REM echo HSRCS = ^$^(HSRCS^) \>>%srcfile%
 	REM echo.			%HSRCS%>>%srcfile%
-)
-if "%CSRCS%" neq "" (
-	echo %CSRCS%
+REM )
+REM if "%CSRCS%" neq "" (
+	REM echo %CSRCS%
 	REM echo.>>%srcfile%
 	REM echo CSRCS = ^$^(CSRCS^) \>>%srcfile%
 	REM echo.			%CSRCS%>>%srcfile%
-)
-if "%CPPSRCS%" neq "" (
-	echo %CPPSRCS%
+REM )
+REM if "%CPPSRCS%" neq "" (
+	REM echo %CPPSRCS%
 	REM echo.>>%srcfile%
 	REM echo CPPSRCS = ^$^(CPPSRCS^) \>>%srcfile%
 	REM echo.			%CPPSRCS%>>%srcfile%
-)
+REM )
 REM *.obj
 REM if "%OBJS%" neq "" (
 	REM echo %OBJS%
@@ -116,9 +177,9 @@ echo.>>%srcfile%
 ENDLOCAL
 goto:eof
 
-rem 逐个类型生成
+rem ======== 方法二 逐个类型生成 ===========
 :makeDeplistByOne
-rem ======= to make *.cpp ===========
+rem to make *.cpp
 set CPPSRCS=
 set CSRCS=
 set HSRCS=
@@ -142,7 +203,7 @@ for %%i in (%SRCDIRS%) do (
 	)
 )
 if "%CPPSRCS%" neq "" (echo %CPPSRCS%)
-rem ========= to make *.c ===========
+rem to make *.c 
 for %%i in (%SRCDIRS%) do (
 	if exist %%i (
 		if exist "%%i\*.c" (
@@ -158,7 +219,7 @@ for %%i in (%SRCDIRS%) do (
 	)
 )
 if "%CSRCS%" neq "" echo %CSRCS%
-rem ========= to make *.h ============
+rem to make *.h
 for %%i in (%SRCDIRS%) do (
 	if exist %%i (
 		if exist "%%i\*.h" (

@@ -4,7 +4,15 @@
 :main
 REM 源文件目录
 set SRCDIRS=.
-
+REM 存放依赖文件目录
+set DepDir=
+if "%1" neq "" (
+	if not exist "%1" (
+		echo "%1" isn't exist
+		echo Usage[1]: makedep.bat dir
+		echo Usage[2]: makedep.bat
+	) else ( set DepDir=%1)
+) else ( set DepDir=.)
 REM set OUTDIR=.\bin
 set curdate=%date:~0,4%-%date:~5,2%-%date:~8,2%[%time:~0,2%:%time:~3,2%]
 REM 生成依赖
@@ -58,7 +66,7 @@ for %%x in (%EXTS%) do (
 						rem == make depfile ==
 						if "!oneTime!" == "1" (
 							echo.>>%depfile%
-							echo {%%i}%%x{^$^(OUTDIR^)}.obj:>>%depfile%
+							echo {%%i}%%x{^$^(OUTDIR^)}.obj::>>%depfile%
 							echo.	^$^(CC^) ^$^(CFLAGS^) ^$^(DEFINE^) ^$^(ENCODE^) ^$^(INCDIRS^) /Fo"$(OUTDIR)\\" ^$^(CDBGFLAGS^) ^$^< >>%depfile%
 						)
 					)
