@@ -88,10 +88,12 @@ REM set depfile=%DepDir%\mdepfile.lst
 REM H%SUFFIX% 后缀
 set SUFFIX=SRCS
 echo # >%srcfile%
-echo # %curdate% >>%srcfile%
+echo # By Simon %curdate% >>%srcfile%
 echo # >>%srcfile%
 
-echo # %curdate% >%depfile%
+echo # >%depfile%
+echo # By Simon %curdate% >>%depfile%
+echo # >>%depfile%
 SETLOCAL enabledelayedexpansion
 rem 支持的 扩展名文件
 for %%x in (%EXTS%) do (

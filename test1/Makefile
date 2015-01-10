@@ -7,6 +7,7 @@
 
 TARGET  = test1
 # OBJS    = test1.obj
+SRCDIRS = .
 OUTDIR  = .\bin
 LIBS    = user32.lib kernel32.lib
 DEBUG   = debug
@@ -50,7 +51,7 @@ MAKEDEP = true
 !IF "$(MAKEDEP)" == "true"
 !IF [dir /b | findstr /x "msrcfile.lst" >nul:] || [dir /b | findstr /x "mdepfile.lst" >nul:]
 !MESSAGE to make depend list...
-!IF [makedep.bat >nul:]
+!IF [..\makedep.bat "" "." "$(SRCDIRS)"]
 !MESSAGE makedep.bat is not available
 !ENDIF
 !ENDIF
@@ -65,7 +66,9 @@ ALL: pre_handle $(TARGET)
 $(TARGET): $(OBJS) $(RESRCS)
 	$(LD) $(LDFLAGS) $(LDBGFLAGS) $(LIBDIRS) $(LIBS) $(DLLFLAGS) $(OBJS) $(RESRCS)
 
-
+!IF "$(MAKEDEP)" == "true"
+!INCLUDE "mdepfile.lst"
+!ENDIF
 # {Control}.cpp{$(OUTDIR)}.obj:
 # $(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $<
 
@@ -102,6 +105,4 @@ clean:
 #.PHONY: error
 # #pragma warning(disable:4005) 忽略4005警告
 # #pragma warning(default:4005) 打开4005警告
-!IF "$(MAKEDEP)" == "true"
-!INCLUDE "mdepfile.lst"
-!ENDIF
+

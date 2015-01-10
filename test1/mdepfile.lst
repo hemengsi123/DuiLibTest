@@ -1,4 +1,6 @@
-# 2015-01-11[ 0:08] 
+# 
+# By Simon 2015-01-11[ 0:36] 
+# 
 
 {.}.CPP{$(OUTDIR)}.obj::
 	$(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $< 
