@@ -2,7 +2,9 @@
 # VC++ nmake Makefile
 # by Simon 2014.12.31
 #
+
 # .SUFFIXES: .cpp
+
 TARGET  = test1
 # OBJS    = test1.obj
 OUTDIR  = .\bin
