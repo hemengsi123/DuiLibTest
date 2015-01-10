@@ -36,7 +36,7 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPreInstance, _In_
         480,                //窗口的宽度  
         250,                //窗口的高度  
         NULL,               //没有父窗口，为NULL  
-        NULL,               //没有菜单，为NULL  
+        NULL,          //没有菜单，为NULL  
         hInstance,          //当前应用程序的实例句柄  
         NULL);              //没有附加数据，为NULL  
     if(hwnd == NULL) //检查窗口是否创建成功  

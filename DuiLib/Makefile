@@ -28,7 +28,8 @@ ASMFLAGS  = /Fa"$*.asm"
 ENCODE    = /D UNICODE /D _UNICODE
 # 编译资源 0x804 中国,0x409 美国
 RC   = rc.exe
-RCFLAGS = /l /v 0x804
+RCFLAGS =  /v /l 0x804
+# RESRCS  = $(OUTDIR)\test1.res
 RESRCS  = 
 # 连接
 LD        = link.exe
@@ -36,16 +37,26 @@ LD        = link.exe
 LDFLAGS   = /nologo /Machine:x86 
 LDBGFLAGS = /debug  /pdb:"$(OUTDIR)\\$(TARGET).pdb"
 DLLFLAGS  = /BASE:"0x11000000" /DYNAMICBASE /NXCOMPAT /DLL /OUT:"$(OUTDIR)\\$@.dll" /IMPLIB:"$(OUTDIR)\\$@.lib"
-
+# 通过 makedep.bat 生成依赖文件 (msrcfile.lst 不存在,则执行makedep.bat)
+MAKEDEP = true
+# MAKEDEP = false
+!IF "$(MAKEDEP)" == "true"
+!IF [dir /b | findstr /x "msrcfile.lst" >nul:]
+!MESSAGE to make depend list...
+!IF [makedep.bat >nul:]
+!MESSAGE makedep.bat is not available
+!ENDIF
+!ENDIF
 !INCLUDE "msrcfile.lst"
+!ENDIF
 # ALL: clean pre_handle $(TARGET)
 ALL: pre_handle $(TARGET)
 	@echo Build Successs...$(DEBUG)
 .PHONY: ALL
 # $@ 目标名(包括扩展名), $* 目标名(不包括扩展名), $** 所有依赖文件(包括扩展名)
 # target: objs res $(OUTDIR)\
-$(TARGET): $(OBJS) $(HSRCS)
-	$(LD) $(LDFLAGS) $(LDBGFLAGS) $(LIBDIRS) $(LIBS) $(DLLFLAGS) $(OBJS)
+$(TARGET): $(OBJS) $(RESRCS)
+	$(LD) $(LDFLAGS) $(LDBGFLAGS) $(LIBDIRS) $(LIBS) $(DLLFLAGS) $(OBJS) $(RESRCS)
 
 
 # {Control}.cpp{$(OUTDIR)}.obj:
@@ -56,9 +67,8 @@ $(TARGET): $(OBJS) $(HSRCS)
 # $(CC) $(CFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$(OUTDIR)\\" $(CDBGFLAGS) $<
 
 # "$(OUTDIR)\\$(RESRCS).res" $(RESRCS).rc
-$(OUTDIR)\$(RESRCS).res: $(RESRCS).rc
-	$(RC) $(RCFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo$@ $**
-.PHONY: $(OUTDIR)\$(RESRCS).res
+.rc{$(OUTDIR)}.res:
+	$(RC) $(RCFLAGS) $(DEFINE) $(ENCODE) $(INCDIRS) /Fo"$@" $(@B).rc
 
 # @echo $(CSRCS)
 pre_handle:
@@ -84,4 +94,6 @@ clean:
 # #pragma warning(disable:4005) 忽略4005警告
 # #pragma warning(default:4005) 打开4005警告
 
+!IF "$(MAKEDEP)" == "true"
 !INCLUDE "mdepfile.lst"
+!ENDIF
