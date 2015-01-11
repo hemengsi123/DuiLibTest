@@ -9,8 +9,9 @@ TARGET  = test1
 # OBJS    = test1.obj
 SRCDIRS = .
 OUTDIR  = .\bin
+MAKEDEP = true
+DEBUG   = Debug
 LIBS    = user32.lib kernel32.lib
-DEBUG   = debug
 INCDIRS = /I"D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include" /I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include" \
 			/I"D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include" /I.
 
@@ -24,7 +25,7 @@ CC      = cl.exe
 # /GX:允许同步异常处理 /Yu"stdafx.h"  /errorReport:prompt /Fo 目标文件路径, /Fd 调试数据库文件 /Fa"$*.asm"
 DEFINE    = /D WIN32  /D _WINDOWS /D UILIB_EXPORTS /D _WINDLL
 CFLAGS    = /c /nologo /Zi /W3 /Od /FD /Gm /EHsc /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope
-CDBGFLAGS = /D _DEBUG /Fd"$(OUTDIR)\\vc100.pdb"
+# CDBGFLAGS = /D _DEBUG /Fd"$(OUTDIR)\\vc100.pdb"
 LOGFILE   = >> $(OUTDIR)\make.log 2>&1
 # 生成 asm 文件
 ASMFLAGS  = /Fa"$*.asm"
@@ -41,12 +42,16 @@ LD        = link.exe
 LDFLAGS   = /nologo /Machine:x86 /OPT:REF /OPT:ICF
 LDFLAGS   = $(LDFLAGS) /OUT:"$(OUTDIR)\\$@.exe"
 # LDFLAGS   = $(LDFLAGS) /debug  /pdb:"$(OUTDIR)\\$(TARGET).pdb"
+!IF "$(DEBUG)" == "Debug"
+CDBGFLAGS = /D _DEBUG /Fd"$(OUTDIR)\\vc100.pdb" /FD
 LDBGFLAGS = /debug  /pdb:"$(OUTDIR)\\$(TARGET).pdb"
+!ELSE
+DEBUG     = Release
+!ENDIF
 
 # DLLFLAGS  = /BASE:"0x11000000" /DYNAMICBASE /NXCOMPAT /DLL /OUT:"$(OUTDIR)\\$@.dll" /IMPLIB:"$(OUTDIR)\\$@.lib"
 
 # 通过 makedep.bat 生成依赖文件 (msrcfile.lst 不存在,则执行makedep.bat)
-MAKEDEP = true
 # MAKEDEP = false
 !IF "$(MAKEDEP)" == "true"
 !IF [dir /b | findstr /x "msrcfile.lst" >nul:] || [dir /b | findstr /x "mdepfile.lst" >nul:]

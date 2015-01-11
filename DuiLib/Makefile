@@ -6,7 +6,7 @@
 TARGET  = DuiLib
 SRCDIRS = . Control Utils CORE Layout
 OUTDIR  = .\bin
-DEBUG   = debug
+DEBUG   = Debug
 MAKEDEP = true
 # OBJS    = test1.obj
 LIBS    = user32.lib kernel32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
@@ -36,9 +36,11 @@ RESRCS  =
 LD        = link.exe
 # LDFLAGS = /nologo /Machine:x86 /OUT:"$(OUTDIR)\\$@.exe"
 LDFLAGS   = /nologo /Machine:x86 
-!IF "$(DEBUG)" == "debug"
+!IF "$(DEBUG)" == "Debug"
 CDBGFLAGS = /D _DEBUG /Fd"$(OUTDIR)\\vc100.pdb" /FD
 LDBGFLAGS = /debug  /pdb:"$(OUTDIR)\\$(TARGET).pdb"
+!ELSE
+DEBUG     = Release
 !ENDIF
 DLLFLAGS  = /BASE:"0x11000000" /DYNAMICBASE /NXCOMPAT /DLL /OUT:"$(OUTDIR)\\$@.dll" /IMPLIB:"$(OUTDIR)\\$@.lib"
 # 通过 makedep.bat 生成依赖文件 (msrcfile.lst 不存在,则执行makedep.bat)
